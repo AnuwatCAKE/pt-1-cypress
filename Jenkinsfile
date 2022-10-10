@@ -1,39 +1,36 @@
 pipeline {
-   agent any
-
-   tools {nodejs "Node12"}
-
-   environment {
-       CHROME_BIN = '/bin/google-chrome'
-      
-   }
-
-   stages {
-       stage('Dependencies') {
-           steps {
-               sh 'npm i'
-           }
-       }
-       stage('e2e Tests') {
-         Parallel{
-             stage('Test 1') {
-                  steps {
-                sh 'npm run cypress:ci'
-                  }
-               }
-             
-             stage('Test 2') {
-                  steps {
-                sh 'npm run cypress2:ci'
-                  }
-               }
-
-       }
-       stage('Deploy') {
-           steps {
-               echo 'Deploying....'
-           }
-       }
-   }
-}
+  agent any
+  tools {nodejs "node"}
+  stages {
+    stage('build'){
+    steps{
+        git 'https://github.com/AnuwatCAKE/pt-1-cypress.git'
+        }
+    }
+    // Install and verify Cypress
+    stage('installation') {
+      steps {
+        sh 'npm install cypress --save-dev'
+      }
+    }
+    // stage('run e2e tests') {
+    //   environment {
+    //     CYPRESS_ADMIN_USER_EMAIL = credentials('ADMIN_EMAIL')
+    //     CYPRESS_ADMIN_USER_PASSWORD = credentials('ADMIN_PASSWORD')
+    //     CYPRESS_LMS_USER_EMAIL = credentials('LMS_EMAIL')
+    //     CYPRESS_LMS_USER_PASSWORD = credentials('ADMIN_PASSWORD')
+    //     CYPRESS_GMAIL_ID = credentials('CYPRESS_GMAIL_ID')
+    //     CYPRESS_GMAIL_CLIENT_ID = credentials('CYPRESS_GMAIL_CLIENT_ID')
+    //     CYPRESS_GMAIL_CLIENT_SECRET = credentials('CYPRESS_GMAIL_CLIENT_SECRET')
+    //     CYPRESS_GMAIL_ACCESS_TOKEN = credentials('CYPRESS_GMAIL_ACCESS_TOKEM')
+    //     CYPRESS_GMAIL_REFRESH_TOKEN = credentials('CYPRESS_GMAIL_REFRESH_TOKEN')
+    //   }
+      steps {
+        sh 'npm run cypress:open'
+      }
+    }
+  }
+  post {
+    // Send an email in case of failure
+    }
 }
