@@ -1,36 +1,19 @@
 pipeline {
-  agent any
-  tools {nodejs "node"}
-  stages {
-    stage('build'){
-    steps{
-        git 'https://github.com/AnuwatCAKE/pt-1-cypress.git'
+    agent {
+        docker {
+            image 'cypress/included:3.8.0'
+            args "--entrypoint='' -u root"
         }
     }
-    // Install and verify Cypress
-    stage('installation') {
-      steps {
-        sh 'npm install cypress --save-dev'
-      }
+    options {
+        ansiColor('xterm')
     }
-    // stage('run e2e tests') {
-    //   environment {
-    //     CYPRESS_ADMIN_USER_EMAIL = credentials('ADMIN_EMAIL')
-    //     CYPRESS_ADMIN_USER_PASSWORD = credentials('ADMIN_PASSWORD')
-    //     CYPRESS_LMS_USER_EMAIL = credentials('LMS_EMAIL')
-    //     CYPRESS_LMS_USER_PASSWORD = credentials('ADMIN_PASSWORD')
-    //     CYPRESS_GMAIL_ID = credentials('CYPRESS_GMAIL_ID')
-    //     CYPRESS_GMAIL_CLIENT_ID = credentials('CYPRESS_GMAIL_CLIENT_ID')
-    //     CYPRESS_GMAIL_CLIENT_SECRET = credentials('CYPRESS_GMAIL_CLIENT_SECRET')
-    //     CYPRESS_GMAIL_ACCESS_TOKEN = credentials('CYPRESS_GMAIL_ACCESS_TOKEM')
-    //     CYPRESS_GMAIL_REFRESH_TOKEN = credentials('CYPRESS_GMAIL_REFRESH_TOKEN')
-    //   }
-      steps {
-        sh 'npm run cypress:open'
-      }
-    }
-  }
-  post {
-    // Send an email in case of failure
+    stages {
+        stage('test') {
+            steps {
+                sh "npm install"
+                sh "npm run test:ci"
+            }
+        }
     }
 }
