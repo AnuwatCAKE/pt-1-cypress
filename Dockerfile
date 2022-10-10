@@ -1,9 +1,9 @@
 
-FROM cypress/browsers:node13.6.0-chrome80-ff72
+FROM cypress/included:3.8.0
 
 RUN mkdir /app
 WORKDIR /app
-COPY . /app
+COPY package.json ./
 RUN npm install
 RUN $(npm bin)/cypress verify
 RUN $(npm bin)/cypress run --browser chrome
