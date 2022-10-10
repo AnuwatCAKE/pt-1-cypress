@@ -1,6 +1,4 @@
-
 FROM cypress/included:3.8.0
-
 RUN mkdir /app
 WORKDIR /app
 COPY package.json ./
